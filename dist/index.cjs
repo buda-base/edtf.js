@@ -878,7 +878,7 @@ function parse(input, constraints = {}) {
 }
 
 function parser() {
-  return new nearley__default['default'].Parser(grammar.ParserRules, grammar.ParserStart)
+  return new nearley__default["default"].Parser(grammar.ParserRules, grammar.ParserStart)
 }
 
 class ExtDateTime {
@@ -888,7 +888,7 @@ class ExtDateTime {
   }
 
   static parse(input) {
-    return parse(input, { types: [this.type] })
+    return parse(input, { types: [this.name] })
   }
 
   static from(input) {
@@ -1313,8 +1313,8 @@ class Date$1 extends global.Date {
         {
           let obj = args[0];
 
-          assert__default['default'](obj != null);
-          if (obj.type) assert__default['default'].equal('Date', obj.type);
+          assert__default["default"](obj != null);
+          if (obj.type) assert__default["default"].equal('Date', obj.type);
 
           if (obj.values && obj.values.length) {
             precision = obj.values.length;
@@ -1565,11 +1565,11 @@ class Year extends ExtDateTime {
         input = { values: input };
 
       {
-        assert__default['default'](input !== null);
-        if (input.type) assert__default['default'].equal('Year', input.type);
+        assert__default["default"](input !== null);
+        if (input.type) assert__default["default"].equal('Year', input.type);
 
-        assert__default['default'](input.values);
-        assert__default['default'](input.values.length);
+        assert__default["default"](input.values);
+        assert__default["default"](input.values.length);
 
         this.year = input.values[0];
         this.significant = input.significant;
@@ -1652,11 +1652,11 @@ class Decade extends ExtDateTime {
         input = { values: input };
 
       {
-        assert__default['default'](input !== null);
-        if (input.type) assert__default['default'].equal('Decade', input.type);
+        assert__default["default"](input !== null);
+        if (input.type) assert__default["default"].equal('Decade', input.type);
 
-        assert__default['default'](input.values);
-        assert__default['default'](input.values.length === 1);
+        assert__default["default"](input.values);
+        assert__default["default"](input.values.length === 1);
 
         this.decade = input.values[0];
         this.uncertain = !!input.uncertain;
@@ -1679,7 +1679,7 @@ class Decade extends ExtDateTime {
 
   set decade(decade) {
     decade = floor$1(Number(decade));
-    assert__default['default'](abs$1(decade) < 1000, `invalid decade: ${decade}`);
+    assert__default["default"](abs$1(decade) < 1000, `invalid decade: ${decade}`);
     this.values[0] = decade;
   }
 
@@ -1752,11 +1752,11 @@ class Century extends ExtDateTime {
         input = { values: input };
 
       {
-        assert__default['default'](input !== null);
-        if (input.type) assert__default['default'].equal('Century', input.type);
+        assert__default["default"](input !== null);
+        if (input.type) assert__default["default"].equal('Century', input.type);
 
-        assert__default['default'](input.values);
-        assert__default['default'](input.values.length === 1);
+        assert__default["default"](input.values);
+        assert__default["default"](input.values.length === 1);
 
         this.century = input.values[0];
         this.uncertain = !!input.uncertain;
@@ -1779,7 +1779,7 @@ class Century extends ExtDateTime {
 
   set century(century) {
     century = floor(Number(century));
-    assert__default['default'](abs(century) < 100, `invalid century: ${century}`);
+    assert__default["default"](abs(century) < 100, `invalid century: ${century}`);
     this.values[0] = century;
   }
 
@@ -1848,11 +1848,11 @@ class Season extends ExtDateTime {
         input = { values: input };
 
       {
-        assert__default['default'](input !== null);
-        if (input.type) assert__default['default'].equal('Season', input.type);
+        assert__default["default"](input !== null);
+        if (input.type) assert__default["default"].equal('Season', input.type);
 
-        assert__default['default'](input.values);
-        assert__default['default'].equal(2, input.values.length);
+        assert__default["default"](input.values);
+        assert__default["default"].equal(2, input.values.length);
 
         this.year = input.values[0];
         this.season = input.values[1];
@@ -2041,11 +2041,11 @@ class Interval extends ExtDateTime {
         {
           let [obj] = args;
 
-          assert__default['default'](obj !== null);
-          if (obj.type) assert__default['default'].equal('Interval', obj.type);
+          assert__default["default"](obj !== null);
+          if (obj.type) assert__default["default"].equal('Interval', obj.type);
 
-          assert__default['default'](obj.values);
-          assert__default['default'](obj.values.length < 3);
+          assert__default["default"](obj.values);
+          assert__default["default"](obj.values.length < 3);
 
           this.lower = obj.values[0];
           this.upper = obj.values[1];
@@ -2174,10 +2174,10 @@ class List extends ExtDateTime {
         {
           let [obj] = args;
 
-          assert__default['default'](obj !== null);
-          if (obj.type) assert__default['default'].equal(this.type, obj.type);
+          assert__default["default"](obj !== null);
+          if (obj.type) assert__default["default"].equal(this.name, obj.type);
 
-          assert__default['default'](obj.values);
+          assert__default["default"](obj.values);
           this.concat(...obj.values);
 
           this.earlier = !!obj.earlier;
@@ -2186,7 +2186,7 @@ class List extends ExtDateTime {
         break
 
       default:
-        throw new RangeError(`invalid ${this.type} value: ${args}`)
+        throw new RangeError(`invalid ${this.name} value: ${args}`)
       }
     }
   }
@@ -2224,7 +2224,7 @@ class List extends ExtDateTime {
 
   push(value) {
     if (isArray(value)) {
-      assert__default['default'].equal(2, value.length);
+      assert__default["default"].equal(2, value.length);
       return this.values.push(value.map(v => Date$1.from(v)))
     }
 
@@ -2324,7 +2324,7 @@ exports.List = List;
 exports.Season = Season;
 exports.Set = Set;
 exports.Year = Year;
-exports['default'] = edtf;
+exports["default"] = edtf;
 exports.defaults = defaults;
 exports.format = format;
 exports.parse = parse;

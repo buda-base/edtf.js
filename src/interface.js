@@ -7,7 +7,7 @@ export class ExtDateTime {
   }
 
   static parse(input) {
-    return parse(input, { types: [this.type] })
+    return parse(input, { types: [this.name] })
   }
 
   static from(input) {

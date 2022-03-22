@@ -28,7 +28,7 @@ export class List extends ExtDateTime {
           let [obj] = args
 
           assert(obj !== null)
-          if (obj.type) assert.equal(this.type, obj.type)
+          if (obj.type) assert.equal(this.name, obj.type)
 
           assert(obj.values)
           this.concat(...obj.values)
@@ -39,7 +39,7 @@ export class List extends ExtDateTime {
         break
 
       default:
-        throw new RangeError(`invalid ${this.type} value: ${args}`)
+        throw new RangeError(`invalid ${this.name} value: ${args}`)
       }
     }
   }
