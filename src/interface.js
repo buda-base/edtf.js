@@ -27,6 +27,10 @@ export class ExtDateTime {
   get type() {
     return this.constructor.type
   }
+  
+  get objType() {
+    return "ExtDateTime"
+  }
 
   get edtf() {
     return this.toEDTF()

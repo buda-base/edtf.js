@@ -46,6 +46,10 @@ export class Season extends ExtDateTime {
     }
   }
 
+  get objType() {
+    return "Season"
+  }
+
   get year() {
     return this.values[0]
   }

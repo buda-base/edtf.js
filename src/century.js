@@ -49,6 +49,10 @@ export class Century extends ExtDateTime {
     }
   }
 
+  get objType() {
+    return "Century"
+  }
+
   get century() {
     return this.values[0]
   }

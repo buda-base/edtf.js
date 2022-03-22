@@ -47,6 +47,10 @@ export class Year extends ExtDateTime {
     }
   }
 
+  get objType() {
+    return "Year"
+  }
+
   get year() {
     return this.values[0]
   }

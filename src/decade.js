@@ -50,6 +50,10 @@ export class Decade extends ExtDateTime {
     }
   }
 
+  get objType() {
+    return "Decade"
+  }
+
   get decade() {
     return this.values[0]
   }
