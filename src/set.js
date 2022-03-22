@@ -10,6 +10,10 @@ export class Set extends List {
     return 'Set'
   }
 
+  get objType() {
+    return 'Set'
+  }
+
   wrap(content) {
     return `[${content}]`
   }
