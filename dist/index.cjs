@@ -839,19 +839,39 @@ var grammar = { Lexer, ParserRules, ParserStart };
 
 const defaults = {
   level: 2,
-  types: []
+  types: [],
+  seasonIntervals: false
 };
 
 function byLevel(a, b) {
   return a.level < b.level ? -1 : a.level > b.level ? 1 : 0
 }
 
-function limit(results, { level, types } = defaults) {
+function limit(results, constraints = {}) {
   if (!results.length) return results
-  if (typeof level !== 'number') level = defaults.level;
 
-  return results.filter(res =>
-    (level >= res.level) && (!types || types.includes(res.type)))
+  let {
+    level,
+    types,
+    seasonIntervals
+  } = { ...defaults, ...constraints };
+
+
+  return results.filter(res => {
+    if (seasonIntervals && isSeasonInterval(res))
+      return true
+
+    if (res.level > level)
+      return false
+    if (types.length && !types.includes(res.type))
+      return false
+
+    return true
+  })
+}
+
+function isSeasonInterval({ type, values }) {
+  return type === 'Interval' && values[0].type === 'Season'
 }
 
 function best(results) {
@@ -907,6 +927,10 @@ class ExtDateTime {
 
   get type() {
     return this.constructor.type
+  }
+  
+  get objType() {
+    return "ExtDateTime"
   }
 
   get edtf() {
@@ -1024,7 +1048,7 @@ function inherit(target, source) {
   }
 }
 
-var locale$6 = "en-US";
+var locale$5 = "en-US";
 var date$5 = {
 	approximate: {
 		long: "circa %D",
@@ -1038,11 +1062,11 @@ var date$5 = {
 	}
 };
 var require$$0 = {
-	locale: locale$6,
+	locale: locale$5,
 	date: date$5
 };
 
-var locale$5 = "es-ES";
+var locale$4 = "es-ES";
 var date$4 = {
 	approximate: {
 		long: "circa %D",
@@ -1056,11 +1080,11 @@ var date$4 = {
 	}
 };
 var require$$1 = {
-	locale: locale$5,
+	locale: locale$4,
 	date: date$4
 };
 
-var locale$4 = "de-DE";
+var locale$3 = "de-DE";
 var date$3 = {
 	approximate: {
 		long: "circa %D",
@@ -1074,11 +1098,11 @@ var date$3 = {
 	}
 };
 var require$$2 = {
-	locale: locale$4,
+	locale: locale$3,
 	date: date$3
 };
 
-var locale$3 = "fr-FR";
+var locale$2 = "fr-FR";
 var date$2 = {
 	approximate: {
 		long: "circa %D",
@@ -1092,11 +1116,11 @@ var date$2 = {
 	}
 };
 var require$$3 = {
-	locale: locale$3,
+	locale: locale$2,
 	date: date$2
 };
 
-var locale$2 = "it-IT";
+var locale$1 = "it-IT";
 var date$1 = {
 	approximate: {
 		long: "circa %D",
@@ -1110,11 +1134,11 @@ var date$1 = {
 	}
 };
 var require$$4 = {
-	locale: locale$2,
+	locale: locale$1,
 	date: date$1
 };
 
-var locale$1 = "ja-JA";
+var locale = "ja-JA";
 var date = {
 	approximate: {
 		long: "%D頃",
@@ -1128,28 +1152,29 @@ var date = {
 	}
 };
 var require$$5 = {
-	locale: locale$1,
+	locale: locale,
 	date: date
 };
 
-const locale = {};
+const en = require$$0;
+const es = require$$1;
+const de = require$$2;
+const fr = require$$3;
+const it = require$$4;
+const ja = require$$5;
 
-locale.en = require$$0;
-locale.es = require$$1;
-locale.de = require$$2;
-locale.fr = require$$3;
-locale.it = require$$4;
-locale.ja = require$$5;
+const alias = (lang, ...regions) => {
+  for (let region of regions)
+    data[`${lang}-${region}`] = data[lang];
+};
+
+const data = { en, es, de, fr, it, ja };
 
 alias('en', 'AU', 'CA', 'GB', 'NZ', 'SA', 'US');
 alias('de', 'AT', 'CH', 'DE');
 alias('fr', 'CH', 'FR');
 
-function alias(lc, ...args) {
-  for (const ct of args) locale[`${lc}-${ct}`] = locale[lc];
-}
-
-var localeData = locale;
+var localeData = data;
 
 const { assign } = Object;
 
@@ -1585,6 +1610,10 @@ class Year extends ExtDateTime {
     }
   }
 
+  get objType() {
+    return "Year"
+  }
+
   get year() {
     return this.values[0]
   }
@@ -1671,6 +1700,10 @@ class Decade extends ExtDateTime {
     default:
       throw new RangeError('Invalid decade value')
     }
+  }
+
+  get objType() {
+    return "Decade"
   }
 
   get decade() {
@@ -1773,6 +1806,10 @@ class Century extends ExtDateTime {
     }
   }
 
+  get objType() {
+    return "Century"
+  }
+
   get century() {
     return this.values[0]
   }
@@ -1867,6 +1904,10 @@ class Season extends ExtDateTime {
     default:
       throw new RangeError('Invalid season value')
     }
+  }
+
+  get objType() {
+    return "Season"
   }
 
   get year() {
@@ -2068,6 +2109,10 @@ class Interval extends ExtDateTime {
     }
   }
 
+  get objType() {
+    return "Interval"
+  }
+
   get lower() {
     return this.values[0]
   }
@@ -2175,7 +2220,7 @@ class List extends ExtDateTime {
           let [obj] = args;
 
           assert__default["default"](obj !== null);
-          if (obj.type) assert__default["default"].equal(this.name, obj.type);
+          if (obj.type) assert__default["default"].equal(this.objType, obj.type);
 
           assert__default["default"](obj.values);
           this.concat(...obj.values);
@@ -2186,9 +2231,13 @@ class List extends ExtDateTime {
         break
 
       default:
-        throw new RangeError(`invalid ${this.name} value: ${args}`)
+        throw new RangeError(`invalid ${this.objType} value: ${args}`)
       }
     }
+  }
+
+  get objType() {
+    return "List"
   }
 
   get values() {
@@ -2273,6 +2322,10 @@ class Set extends List {
   }
 
   get type() {
+    return 'Set'
+  }
+
+  get objType() {
     return 'Set'
   }
 
