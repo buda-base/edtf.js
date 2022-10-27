@@ -1313,7 +1313,9 @@ const X = new WeakMap();
 
 const PM = [Bitmask.YMD, Bitmask.Y, Bitmask.YM, Bitmask.YMD];
 
-class Date$1 extends global.Date {
+const Parent = (typeof window === 'undefined' ? global.Date : window.Date);
+
+class Date$1 extends Parent {
   constructor(...args) { // eslint-disable-line complexity
     let precision = 0;
     let uncertain, approximate, unspecified;
